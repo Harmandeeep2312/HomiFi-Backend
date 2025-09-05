@@ -98,7 +98,7 @@ app.put("/blog/:id" ,async(req,res)=>{
     res.json(afterUpdate);
 
 });
-app.delete("/blog/:id",isLoggedIn ,async (req,res)=>{
+app.delete("/blog/:id",async (req,res)=>{
      console.log("req.user in delete:", req.user); 
   console.log("session:", req.session);         
     let {id} = req.params;
