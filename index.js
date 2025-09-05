@@ -58,7 +58,7 @@ app.get("/blog" ,async (req,res)=>{
 
 app.get("/blog/:id", async (req, res) => {
   try {
-    const blog = await Content.findById(req.params.id).populate("author", "username email");
+    const blog = await Content.findById(new mongoose.Types.ObjectId(req.params.id)).populate("author", "username email");
 
     if (!blog) {
       return res.status(404).json({ error: "Blog not found" });
