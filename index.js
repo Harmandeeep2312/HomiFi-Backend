@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-import cors from "cors";
+const cors = require("cors");
 const Content = require("./models/contentSchema.js");
 const mongoose = require("./init/loader.js");
 const app=express();
