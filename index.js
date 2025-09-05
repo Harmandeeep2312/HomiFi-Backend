@@ -156,7 +156,10 @@ app.post("/logout", (req, res, next) => {
     res.json({ message: "Logged out successfully" });
   });
 });
-
+app.use(cors({
+  origin: "https://your-frontend.vercel.app", // Your deployed frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 
 const port = 8080;
 app.listen(port,()=>{
