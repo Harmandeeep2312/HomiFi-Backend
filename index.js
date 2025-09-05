@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const cors = require("cors");
+import cors from "cors";
 const Content = require("./models/contentSchema.js");
 const mongoose = require("./init/loader.js");
 const app=express();
@@ -13,7 +13,7 @@ const {saveRedirectUrl, isLoggedIn} = require("./middleware.js");
 app.use(cors({
   origin: "https://homi-fi-frontend-ev9pdy4ux-harmandeep-singhs-projects-8f717c7f.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // if you use cookies/auth headers
+  credentials: true, 
 }));
 app.use(express.json());
 const sessionOption = {
