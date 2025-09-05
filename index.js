@@ -11,7 +11,7 @@ const flash = require("connect-flash");
 const LocalStratergy = require("passport-local"); 
 const {saveRedirectUrl, isLoggedIn} = require("./middleware.js");
 app.use(cors({
-  origin: "https://homi-fi-frontend-ev9pdy4ux-harmandeep-singhs-projects-8f717c7f.vercel.app",
+  origin: "https://homifi-frontend.onrender.com",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, 
 }));
