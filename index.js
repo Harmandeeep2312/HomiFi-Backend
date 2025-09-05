@@ -104,10 +104,6 @@ app.put("/blog/:id", isLoggedIn ,async(req,res)=>{
 app.delete("/blog/:id",isLoggedIn ,async (req,res)=>{
     let {id} = req.params;
     const blog = await Content.findById(id);
-
-     if (!blog.author || blog.author.toString() !== req.user._id.toString()) {
-    return res.status(403).json({ error: "You are not authorized to delete this blog" });
-  }
     await Content.findByIdAndDelete(id);
     res.json({ message: "Content deleted successfully" });
 });
