@@ -58,37 +58,23 @@ app.get("/blog" ,async (req,res)=>{
 
 app.get("/blog/:id", async (req, res) => {
   try {
-    let { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ error: "Invalid blog ID" });
-    }
-
-    let blog = await Content.findById(id).populate("author", "username email _id");
+    const blog = await Content.findById(req.params.id).populate("author", "username email");
 
     if (!blog) {
       return res.status(404).json({ error: "Blog not found" });
     }
 
     res.json({
-      _id: blog._id.toString(),
-      title: blog.title || "",
-      content: blog.content || "",
-      date: blog.date ? blog.date.toISOString() : null,
-      author: blog.author
-        ? {
-            _id: blog.author._id?.toString() || null,
-            username: blog.author.username || "Anonymous",
-            email: blog.author.email || null,
-          }
-        : { _id: null, username: "Anonymous", email: null },
-      currentUser: req.user ? req.user._id.toString() : null,
+      _id: blog._id,
+      title: blog.title,
+      content: blog.content,
+      author: blog.author ? blog.author : { username: "Anonymous" },
+      date: blog.date,
     });
   } catch (err) {
-    console.error("Error in /blog/:id:", err);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Invalid blog ID format or server error" });
   }
-})
+});
 app.post("/blog/new", async(req,res)=>{
     const collectContent = {
         title:req.body.title,
