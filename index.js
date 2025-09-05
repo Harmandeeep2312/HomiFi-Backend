@@ -55,9 +55,17 @@ app.get("/blog" ,async (req,res)=>{
         res.status(500).json({ error: "Internal server error" });
     }
 });
+const mongoose = require("mongoose");
+
 app.get("/blog/:id", async (req, res) => {
   try {
     let { id } = req.params;
+
+    // Check if it's a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid blog ID" });
+    }
+
     let blog = await Content.findById(id).populate("author", "username email _id");
 
     if (!blog) {
@@ -82,8 +90,7 @@ app.get("/blog/:id", async (req, res) => {
     console.error("Error in /blog/:id:", err);
     res.status(500).json({ error: "Internal server error" });
   }
-});
-
+})
 app.post("/blog/new", async(req,res)=>{
     const collectContent = {
         title:req.body.title,
