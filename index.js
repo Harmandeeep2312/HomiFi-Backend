@@ -11,8 +11,9 @@ const flash = require("connect-flash");
 const LocalStratergy = require("passport-local"); 
 const {saveRedirectUrl, isLoggedIn} = require("./middleware.js");
 app.use(cors({
-  origin: "http://localhost:5173",  
-  credentials: true
+  origin: "https://homi-fi-frontend-ev9pdy4ux-harmandeep-singhs-projects-8f717c7f.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // if you use cookies/auth headers
 }));
 app.use(express.json());
 const sessionOption = {
@@ -156,10 +157,6 @@ app.post("/logout", (req, res, next) => {
     res.json({ message: "Logged out successfully" });
   });
 });
-app.use(cors({
-  origin: "https://your-frontend.vercel.app", // Your deployed frontend
-  methods: ["GET", "POST", "PUT", "DELETE"],
-}));
 
 const port = 8080;
 app.listen(port,()=>{
