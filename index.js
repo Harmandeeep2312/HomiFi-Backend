@@ -102,6 +102,8 @@ app.put("/blog/:id", isLoggedIn ,async(req,res)=>{
 
 });
 app.delete("/blog/:id",isLoggedIn ,async (req,res)=>{
+     console.log("req.user in delete:", req.user); 
+  console.log("session:", req.session);         
     let {id} = req.params;
     const blog = await Content.findById(id);
     await Content.findByIdAndDelete(id);
