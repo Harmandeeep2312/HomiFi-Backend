@@ -20,7 +20,7 @@ app.use(express.json());
 const sessionOption = {
     secret: "hlw", 
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 } 
 };
 
@@ -86,7 +86,7 @@ app.post("/blog/new", async(req,res)=>{
     await newContent.save();
     res.json(newContent);
 });
-app.put("/blog/:id", isLoggedIn ,async(req,res)=>{
+app.put("/blog/:id" ,async(req,res)=>{
     let {id}= req.params;
     let blog = await Content.findById(id);
 
@@ -94,9 +94,6 @@ app.put("/blog/:id", isLoggedIn ,async(req,res)=>{
     return res.status(404).json({ error: "Blog not found" });
   }
 
-    if (!blog.author || blog.author.toString() !== req.user._id.toString()) {
-    return res.status(403).json({ error: "You are not authorized to edit this blog" });
-  }
     const afterUpdate = await Content.findByIdAndUpdate(id,{title:req.body.title,content:req.body.content},{new: true});
     res.json(afterUpdate);
 
