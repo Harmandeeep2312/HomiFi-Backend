@@ -12,6 +12,7 @@ const flash = require("connect-flash");
 const LocalStratergy = require("passport-local"); 
 const {saveRedirectUrl, isLoggedIn, validateReview , isReviewAuthor} = require("./middleware.js");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const dotenv = require("dotenv");
 
 app.use(cors({
   origin: "https://homifi-frontend.onrender.com",
