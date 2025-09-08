@@ -1,6 +1,6 @@
-const Review = require("../models/reviewSchema");
-const User = require("../models/userSchema.js");
-const Content = require("../models/contentSchema.js")
+const Review = require("./models/reviewSchema");
+const User = require("./models/userSchema.js");
+const Content = require("./models/contentSchema.js")
 
 module.exports.isLoggedIn = (req,res,next)=>{
      if(!req.isAuthenticated()){
