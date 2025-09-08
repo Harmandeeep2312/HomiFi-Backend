@@ -19,6 +19,12 @@ const contentSchema = new Schema({
         required: false,
     default: null
  },
+ reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Review"
+    }
+  ]
 })
 const Content = mongoose.model("Content",contentSchema);
 module.exports = Content;
