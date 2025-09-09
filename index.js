@@ -213,7 +213,7 @@ app.post("/logout", (req, res, next) => {
     res.json({ message: "Logged out successfully" });
   });
 });
-app.get("/blog/:id", async (req, res) => {
+app.get("/blog/:id/review", async (req, res) => {
   try {
     const blog = await Content.findById(req.params.id)
       .populate("author", "username")
@@ -225,11 +225,6 @@ app.get("/blog/:id", async (req, res) => {
     if (!blog) return res.status(404).json({ error: "Blog not found" });
 
     res.json({
-      _id: blog._id,
-      title: blog.title,
-      content: blog.content,
-      author: blog.author || { username: "Anonymous" },
-      date: blog.date,
       reviews: blog.reviews.map((r) => ({
         _id: r._id,
         comment: r.comment,
