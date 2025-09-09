@@ -216,12 +216,11 @@ app.post("/blog/:id/review" , isLoggedIn ,validateReview ,async(req,res)=>{
     content.reviews.push(newReview._id);
     await newReview.save();
     await content.save();
-    res.json("success","New Review Created")
      res.json({ message: "New review created", review: newReview });
 
 });
 
-app.delete("/:reviewId", isLoggedIn, isReviewAuthor,async(req,res)=>{
+app.delete("/blog/:id/review/:reviewId", isLoggedIn, isReviewAuthor,async(req,res)=>{
     let {id, reviewId}= req.params;
     await Content.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
      await Review.findByIdAndDelete(reviewId);
