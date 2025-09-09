@@ -261,6 +261,7 @@ app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
       comment: req.body.comment,
       rating: req.body.rating,
       author: req.user._id, 
+      blog: content._id 
     });
 
     await newReview.save();

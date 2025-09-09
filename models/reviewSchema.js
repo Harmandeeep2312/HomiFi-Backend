@@ -19,7 +19,7 @@ const reviewSchema = new  Schema({
     },
     blog: {
   type: Schema.Types.ObjectId,
-  ref: "Blog",
+  ref: "Content",
   required: true
 }
 });
