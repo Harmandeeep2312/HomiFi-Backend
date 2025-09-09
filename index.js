@@ -171,11 +171,20 @@ app.post("/signup", async (req, res, next) => {
 app.get("/login" , (req,res)=>{
   res.json({ message: "Login page - use POST /login to authenticate" });
 })
-app.post("/login",saveRedirectUrl,passport.authenticate("local" , {failureRedirect: "/login",failureFlash: true}),(req,res)=>{
-    let redirectUrl = req.session.returnTo || "/"
-    delete req.session.returnTo;
-    res.json({ message: "Login successful", redirectUrl });
-})
+app.post("/login", saveRedirectUrl, (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(401).json({ error: "Invalid username or password" });
+
+    req.login(user, (err) => {
+      if (err) return next(err);
+      const redirectUrl = req.session.returnTo || "/";
+      delete req.session.returnTo;
+      return res.json({ message: "Login successful", user, redirectUrl });
+    });
+  })(req, res, next);
+});
+
 
 app.get("/checkAuth", (req, res) => {
   if (req.isAuthenticated()) {
@@ -204,11 +213,35 @@ app.post("/logout", (req, res, next) => {
   });
 });
 app.get("/blog/:id", async (req, res) => {
-  const blog = await Blog.findById(req.params.id)
-    .populate("reviews"); 
-  if (!blog) return res.status(404).json({ error: "Blog not found" });
-  res.json(blog);
+  try {
+    const blog = await Content.findById(req.params.id)
+      .populate("author", "username")
+      .populate({
+        path: "reviews",
+        populate: { path: "author", select: "username" },
+      });
+
+    if (!blog) return res.status(404).json({ error: "Blog not found" });
+
+    res.json({
+      _id: blog._id,
+      title: blog.title,
+      content: blog.content,
+      author: blog.author || { username: "Anonymous" },
+      date: blog.date,
+      reviews: blog.reviews.map((r) => ({
+        _id: r._id,
+        comment: r.comment,
+        rating: r.rating,
+        author: r.author ? r.author.username : "Anonymous",
+        date: r.date,
+      })),
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
+
 
 app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
   try {
