@@ -4,8 +4,6 @@ const Content = require("./models/contentSchema.js")
 
 module.exports.isLoggedIn = (req,res,next)=>{
      if(!req.isAuthenticated()){
-        req.session.returnTo = req.originalUrl;
-        req.flash("error", "You Must Be LoggedIn To Create Listing");
         return res.status(401).json({ error: "You must be logged in" });
     }
     next(); 
