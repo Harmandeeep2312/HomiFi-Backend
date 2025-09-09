@@ -203,6 +203,12 @@ app.post("/logout", (req, res, next) => {
     res.json({ message: "Logged out successfully" });
   });
 });
+app.get("/blog/:id", async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+    .populate("reviews"); 
+  if (!blog) return res.status(404).json({ error: "Blog not found" });
+  res.json(blog);
+});
 
 app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
   try {
