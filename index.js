@@ -260,7 +260,6 @@ console.log("Request body:", req.body);
     let newReview = new Review({
       comment: req.body.comment,
       rating: req.body.rating,
-      author: req.user._id,  
     });
 
     content.reviews.push(newReview._id);
