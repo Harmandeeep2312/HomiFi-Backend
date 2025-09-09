@@ -204,22 +204,32 @@ app.post("/logout", (req, res, next) => {
   });
 });
 
-app.post("/blog/:id/review" , isLoggedIn ,validateReview ,async(req,res)=>{
-   let {id} = req.params;
+app.post("/blog/:id/review", isLoggedIn, validateReview, async (req, res) => {
+  try {
+    let { id } = req.params;
     let content = await Content.findById(id);
+
+    if (!content) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
     let newReview = new Review({
       comment: req.body.comment,
       rating: req.body.rating,
-      author: req.user._id
+      author: req.user._id,  
     });
-    newReview.author = req.user._id;
+
     content.reviews.push(newReview._id);
+
     await newReview.save();
     await content.save();
-     res.json({ message: "New review created", review: newReview });
 
+    res.status(201).json({ message: "New review created", review: newReview });
+  } catch (err) {
+    console.error("🔥 Review creation error:", err);  
+    res.status(500).json({ error: "Server error while creating review" });
+  }
 });
-
 app.delete("/blog/:id/review/:reviewId", isLoggedIn, isReviewAuthor,async(req,res)=>{
     let {id, reviewId}= req.params;
     await Content.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
