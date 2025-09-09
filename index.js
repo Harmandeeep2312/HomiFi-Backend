@@ -245,6 +245,10 @@ app.get("/blog/:id", async (req, res) => {
 
 
 app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
+  console.log("POST /blog/:id/review called");
+console.log("Blog ID:", req.params.id);
+console.log("Request body:", req.body);
+
   try {
     let { id } = req.params;
     let content = await Content.findById(id);
@@ -266,7 +270,7 @@ app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
 
     res.status(201).json({ message: "New review created", review: newReview });
   } catch (err) {
-    console.error("🔥 Review creation error:", err);  
+    console.error(" Review creation error:", err);  
     res.status(500).json({ error: "Server error while creating review" });
   }
 });
