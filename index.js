@@ -171,19 +171,20 @@ app.post("/signup", async (req, res, next) => {
 app.get("/login" , (req,res)=>{
   res.json({ message: "Login page - use POST /login to authenticate" });
 })
-app.post("/login", saveRedirectUrl, (req, res, next) => {
+app.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
-    if (!user) return res.status(401).json({ error: "Invalid username or password" });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid username or password" });
+    }
 
     req.login(user, (err) => {
       if (err) return next(err);
-      const redirectUrl = req.session.returnTo || "/";
-      delete req.session.returnTo;
-      return res.json({ message: "Login successful", user, redirectUrl });
+      res.json({ message: "Login successful", user: { _id: user._id, username: user.username } });
     });
   })(req, res, next);
 });
+
 
 
 app.get("/checkAuth", (req, res) => {
