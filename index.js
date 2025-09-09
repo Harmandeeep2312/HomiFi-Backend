@@ -239,40 +239,41 @@ app.get("/blog/:id", async (req, res) => {
       })),
     });
   } catch (err) {
+    console.error("GET /blog/:id error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
 
+
 app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
   console.log("POST /blog/:id/review called");
-console.log("Blog ID:", req.params.id);
-console.log("Request body:", req.body);
+  console.log("req.user:", req.user);
+  console.log("Blog ID:", req.params.id);
+  console.log("Request body:", req.body);
 
   try {
-    let { id } = req.params;
-    let content = await Content.findById(id);
+    const { id } = req.params;
+    const content = await Content.findById(id);
+    if (!content) return res.status(404).json({ error: "Blog not found" });
 
-    if (!content) {
-      return res.status(404).json({ error: "Blog not found" });
-    }
-
-    let newReview = new Review({
+    const newReview = new Review({
       comment: req.body.comment,
       rating: req.body.rating,
+      author: req.user._id, 
     });
 
-    content.reviews.push(newReview._id);
-
     await newReview.save();
+    content.reviews.push(newReview._id);
     await content.save();
 
     res.status(201).json({ message: "New review created", review: newReview });
   } catch (err) {
-    console.error(" Review creation error:", err);  
+    console.error("Review creation error:", err);
     res.status(500).json({ error: "Server error while creating review" });
   }
 });
+
 app.delete("/blog/:id/review/:reviewId", isLoggedIn, isReviewAuthor,async(req,res)=>{
     let {id, reviewId}= req.params;
     await Content.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
