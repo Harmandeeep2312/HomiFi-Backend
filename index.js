@@ -204,7 +204,7 @@ app.post("/logout", (req, res, next) => {
   });
 });
 
-app.post("/blog/:id/review", isLoggedIn, validateReview, async (req, res) => {
+app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
   try {
     let { id } = req.params;
     let content = await Content.findById(id);
