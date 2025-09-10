@@ -135,6 +135,7 @@ app.post("/blog/new", async(req,res)=>{
     const collectContent = {
         title:req.body.title,
         content:req.body.content,
+        Btype: req.body.Btype,
         author: req.user ? req.user._id : null
     };
     const newContent = new Content(collectContent);
