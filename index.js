@@ -70,8 +70,18 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.get("/blog" ,async (req,res)=>{
+  const { search, Btype } = req.query;
+  const query = {};
+
+  if (search) {
+    query.title = { $regex: search, $options: "i" }; 
+  }
+  if (Btype) {
+    query.Btype = Btype;
+  }
+
     try {
-    let contents = await Content.find({}).populate("author", "username email");
+    let contents = await Content.find({query}).populate("author", "username email");
 
    const result = contents.map((blog) => {
       const blogObj = blog.toObject();
@@ -94,22 +104,6 @@ app.get("/blog" ,async (req,res)=>{
 });
 
 app.get("/blog/:id", async (req, res) => {
-  const { search, type } = req.query;
-  const query = {};
-
-  if (search) {
-    query.title = { $regex: search, $options: "i" }; // case-insensitive search
-  }
-  if (type) {
-    query.type = type;
-  }
-
-  try {
-    const blogs = await Blog.find(query).populate("author", "username");
-    res.json(blogs);
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching blogs" });
-  }
   try {
     const blog = await Content.findById(new mongoose.Types.ObjectId(req.params.id)).populate("author", "username email").populate({
     path: "reviews",
@@ -295,26 +289,43 @@ app.delete("/blog/:id/review/:reviewId", isLoggedIn, isReviewAuthor,async(req,re
 })
 
 
-app.get("/user/:id/dashboard" , async(req,res)=>{
+
+
+app.get("/user/:id/dashboard", async (req, res) => {
   try {
+   
     const blogs = await Content.find({ author: req.params.id })
-      .populate("author", "username")
-      .populate("reviews", "comment") 
+      .populate({
+        path: "reviews",
+        select: "rating comment",
+      })
       .lean();
 
-    const dashboardData = blogs.map(blog => ({
-      title: blog.title,
-      likes: blog.likes ? blog.likes.length : 0,
-      comments: blog.reviews ? blog.reviews.length : 0,
-      createdAt: blog.createdAt,
-    }));
+    const dashboardData = blogs.map(blog => {
+     
+      let avgRating = 0;
+      if (blog.reviews && blog.reviews.length > 0) {
+        const total = blog.reviews.reduce((sum, r) => sum + (r.rating || 0), 0);
+        avgRating = total / blog.reviews.length;
+      }
+
+      return {
+        _id: blog._id,
+        title: blog.title,
+        rating: parseFloat(avgRating.toFixed(1)), 
+        comments: blog.reviews ? blog.reviews.length : 0, 
+        createdAt: blog.createdAt,
+      };
+    });
 
     res.json(dashboardData);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Something went wrong" });
   }
+});
 
-})
+
 const port = 8080;
 app.listen(port,()=>{
     console.log(`listening to port ${port}`);
