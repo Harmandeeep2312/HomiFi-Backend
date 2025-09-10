@@ -9,6 +9,11 @@ const contentSchema = new Schema({
     content: {
         type:String
     },
+    Btype: { 
+    type: String, 
+    enum: ["General Lifestyle & Personal", "Technology & Business", "Creative & Entertainment", "Education & Knowledge"], 
+    required: true 
+  },
     date: {
         type: Date,
         default:Date.now
