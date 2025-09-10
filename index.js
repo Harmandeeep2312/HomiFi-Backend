@@ -253,11 +253,6 @@ app.get("/blog/:id/review", async (req, res) => {
 
 
 app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
-  console.log("POST /blog/:id/review called");
-  console.log("req.user:", req.user);
-  console.log("Blog ID:", req.params.id);
-  console.log("Request body:", req.body);
-
   try {
     const { id } = req.params;
     const content = await Content.findById(id);
@@ -266,20 +261,28 @@ app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
     const newReview = new Review({
       comment: req.body.comment,
       rating: req.body.rating,
-      author: req.user._id, 
-      blog: content._id 
+      author: req.user._id,
+      blog: content._id,
     });
 
     await newReview.save();
+
     content.reviews.push(newReview._id);
     await content.save();
 
-    res.status(201).json({ message: "New review created", review: newReview });
+    const populatedReview = await Review.findById(newReview._id)
+      .populate("author", "username email");
+
+    res.status(201).json({
+      message: "New review created",
+      review: populatedReview,
+    });
   } catch (err) {
-    console.error("Review creation error:", err.message, err.stack);
+    console.error("Review creation error:", err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 app.delete("/blog/:id/review/:reviewId", isLoggedIn, isReviewAuthor,async(req,res)=>{
     let {id, reviewId}= req.params;
