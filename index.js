@@ -10,7 +10,7 @@ const passport = require("passport");
 const session = require("express-session");
 const flash = require("connect-flash");
 const LocalStratergy = require("passport-local"); 
-const {saveRedirectUrl, isLoggedIn, validateReview , isReviewAuthor} = require("./middleware.js");
+const {saveRedirectUrl, isLoggedIn, isBlogAuthor, isReviewAuthor} = require("./middleware.js");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const dotenv = require("dotenv");
 
@@ -136,7 +136,7 @@ app.post("/blog/new", async(req,res)=>{
     await newContent.save();
     res.json(newContent);
 });
-app.put("/blog/:id",isLoggedIn ,async(req,res)=>{
+app.put("/blog/:id",isLoggedIn,isBlogAuthor ,async(req,res)=>{
     let {id}= req.params;
     let blog = await Content.findById(id);
 
@@ -148,7 +148,7 @@ app.put("/blog/:id",isLoggedIn ,async(req,res)=>{
     res.json(afterUpdate);
 
 });
-app.delete("/blog/:id", isLoggedIn,async (req,res)=>{
+app.delete("/blog/:id", isLoggedIn,isBlogAuthor,async (req,res)=>{
      console.log("req.user in delete:", req.user); 
   console.log("session:", req.session);         
     let {id} = req.params;

@@ -22,7 +22,7 @@ module.exports.saveRedirectUrl = (req,res,next)=>{
   const { error } = reviewSchema.validate(req.body);
   if (error) {
     const errMsg = error.details.map((el) => el.message).join(",");
-    return res.status(400).json({ error: errMsg }); // ✅ send error directly
+    return res.status(400).json({ error: errMsg }); 
   } else {
     next();
   }
@@ -43,4 +43,22 @@ module.exports.isReviewAuthor = async (req, res, next) => {
   }
 
   next();
+};
+
+
+module.exports.isBlogAuthor = async (req, res, next) => {
+  try {
+    const { id } = req.params; 
+    const blog = await Content.findById(id);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+    if (!req.user || !blog.author.equals(req.user._id)) {
+      return res.status(403).json({ error: "You do not have permission to edit or delete this blog" });
+    }
+    next();
+  } catch (err) {
+    console.error("isBlogAuthor middleware error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
