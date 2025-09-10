@@ -81,7 +81,7 @@ app.get("/blog" ,async (req,res)=>{
   }
 
     try {
-    let contents = await Content.find({query}).populate("author", "username email");
+    let contents = await Content.find(query).populate("author", "username email");
 
    const result = contents.map((blog) => {
       const blogObj = blog.toObject();
