@@ -276,8 +276,8 @@ app.post("/blog/:id/review", isLoggedIn, async (req, res) => {
 
     res.status(201).json({ message: "New review created", review: newReview });
   } catch (err) {
-    console.error("Review creation error:", err);
-    res.status(500).json({ error: "Server error while creating review" });
+    console.error("Review creation error:", err.message, err.stack);
+    res.status(500).json({ error: err.message });
   }
 });
 
