@@ -5,6 +5,10 @@ It’s built with **Node.js + Express + MongoDB** and integrates **Google OAuth 
 
 This service is the **engine** behind the platform: it stores user data, manages blogs, and enables community interactions through comments.
 
+🔗 **Frontend Repository**  
+The frontend for HomiFi (React + Vite) is located here:  
+👉 [HomiFi Frontend Repository](https://github.com/Harmandeeep2312/HomiFi-Frontend.git)
+
 ---
 
 ## 🌟 What This Backend Does
