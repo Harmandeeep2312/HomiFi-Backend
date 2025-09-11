@@ -1,9 +1,4 @@
-
----
-
-### 📄 `server/README.md`
-```markdown
-# HomiFi - Backend
+# HomiFi – Backend
 
 The **backend** of HomiFi powers the entire blogging platform by handling data, authentication, and API endpoints.  
 It’s built with **Node.js + Express + MongoDB** and integrates **Google OAuth 2.0** for secure login.
@@ -21,17 +16,22 @@ This service is the **engine** behind the platform: it stores user data, manages
 - **Scalable API Design** – Clean REST architecture, ready for scaling.  
 
 ---
-## Demo-video
-https://drive.google.com/drive/folders/14IBuUbnINqiBrYk3FFAm7wlgXlkgT14v?usp=drive_link
+
+## 📺 Demo Video
+[Click here](https://drive.google.com/drive/folders/14IBuUbnINqiBrYk3FFAm7wlgXlkgT14v?usp=drive_link)
+
+---
 
 ## 📂 Project Structure
+```
 server/
-│── init/ # Database connection setup
-│── models/ # Mongoose schemas (User, Blog, Comment)
-│── middleware.js # Custom middleware for authentication
-│── index.js # Entry point (Express app)
+│── init/            # Database connection setup
+│── models/          # Mongoose schemas (User, Blog, Comment)
+│── middleware.js    # Custom middleware for authentication
+│── index.js         # Entry point (Express app)
 │── package.json
-│── .env # Environment variables
+│── .env             # Environment variables
+```
 
 ---
 
@@ -41,47 +41,52 @@ server/
 ```bash
 cd server
 npm install
+```
 
-## 2️⃣ Configure Environment
-
-Create a .env file in server/:
-
+### 2️⃣ Configure Environment
+Create a `.env` file in `server/`:
+```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/homifi
 SESSION_SECRET=your_secret_key
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 GOOGLE_CALLBACK_URL=http://localhost:5000/auth/google/callback
+```
 
-## 3️⃣ Run the Server
+### 3️⃣ Run the Server
+```bash
 npm run dev   # if nodemon is installed
 # OR
 node index.js
+```
+API will be served at [http://localhost:8080](http://localhost:8080)
 
-
-API will be served at http://localhost:5000
-.
+---
 
 ## 📡 Example API Endpoints
 
-GET /api/blogs → Fetch all blogs
+- `GET /api/blogs` → Fetch all blogs  
+- `POST /api/blogs` → Create a new blog (requires login)  
+- `GET /api/blogs/:id` → Fetch blog by ID  
+- `POST /api/blogs/:id/comments` → Add comment to blog  
+- `GET /auth/google` → Start Google login  
+- `GET /auth/google/callback` → Google OAuth callback  
 
-POST /api/blogs → Create a new blog (requires login)
+---
 
-GET /api/blogs/:id → Fetch blog by ID
+## 🛠 Tech Stack
+- **Node.js + Express** – Web server and routing  
+- **MongoDB + Mongoose** – Database and ORM  
+- **Passport.js (Google OAuth 2.0)** – Authentication  
+- **Express-session** – Session management  
 
-POST /api/blogs/:id/comments → Add comment to blog
+---
 
-GET /auth/google → Start Google login
+## 🤝 Contributing
+Contributions are welcome! Please fork this repo and submit a pull request.
 
-GET /auth/google/callback → Google OAuth callback
+---
 
-## 🛠️ Tech Stack
-
-Node.js + Express – Web server and routing.
-
-MongoDB + Mongoose – Database and ORM.
-
-Passport.js (Google OAuth 2.0) – Authentication.
-
-Express-session – Session management.
+## 📜 License
+This project is licensed under the MIT License.
